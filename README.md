@@ -27,7 +27,7 @@ This project uses mainly Terraform as infrastructure management and installation
 
 ### Prerequisites
 
-1. To use Terraform automation, download the Terraform binaries [here](https://www.terraform.io/).
+1. To use Terraform automation, download the Terraform binaries [here](https://www.terraform.io/). The code here supports Terraform 0.12 - 0.12.13; there are warning messages to run this on 0.12.14 and later.
 
    On MacOS, you can acquire it using [homebrew](brew.sh) using this command:
 
@@ -67,7 +67,7 @@ This project uses mainly Terraform as infrastructure management and installation
 
 3. Prepare the DNS
 
-   OpenShift requires a valid DNS doamin, you can get one from AWS Route53 or using existing domain and registrar.
+   OpenShift requires a valid DNS domain, you can get one from AWS Route53 or using existing domain and registrar. The DNS must be registered as a Public Hosted Zone in Route53.
 
 
 4. Prepare AWS Account Access
@@ -125,8 +125,7 @@ This project installs the OpenShift 4 in several stages where each stage automat
   aws_secret_access_key = ""
   bootstrap = { type = "i3.xlarge" }
   control_plane = { count = "3" , type = "m4.xlarge", disk = "120" }
-  use_worker_machinesets = true
-  # worker = {        count = "3" , type = "m4.large" , disk = "120" }
+  worker        = { count = "3" , type = "m4.xlarge" , disk = "120" }
   openshift_pull_secret = "./openshift_pull_secret.json"
   openshift_installer_url = "https://mirror.openshift.com/pub/openshift-v4/clients/ocp/latest"
   ```
@@ -139,13 +138,13 @@ This project installs the OpenShift 4 in several stages where each stage automat
 | `infrastructure_id` | yes | This id will be prefixed to all the AWS infrastructure resources provisioned with the script - typically using the clustername as its prefix.  |
 | `clustername`     | yes          | The name of the OpenShift cluster you will install     |
 | `domain` | yes | The domain that has been created in Route53 public hosted zone |
-| `ami` | no | Red Hat CoreOS ami for your region (see https://docs.openshift.com/container-platform/4.2/installing/installing_aws_user_infra/installing-aws-user-infra.html). |
+| `ami` | no | Red Hat CoreOS ami for your region (see [here](https://docs.openshift.com/container-platform/4.2/installing/installing_aws_user_infra/installing-aws-user-infra.html#installation-aws-user-infra-rhcos-ami_installing-aws-user-infra)). Other platforms images information can be found [here](https://github.com/openshift/installer/blob/master/data/data/rhcos.json) |
 | `aws_secret_access_key` | yes | adding aws_secret_access_key to the cluster |
 | `aws_access_key_id` | yes | adding aws_access_key_id to the cluster |
 | `bootstrap` | no | |
 | `control_plane` | no | |
 | `use_worker_machinesets` | no | if set to true, then workers are created using machinesets otherwise use the worker variable |
-| `worker` | no | if not using the machinesets, this variable is used to size the worker machines |
+| `worker` | no | this variable is used to size the worker machines |
 | `openshift_pull_secret` | no | The value refers to a file name that contain downloaded pull secret from https://cloud.redhat.com/openshift/install; the default name is `openshift_pull_secret.json` |
 | `openshift_installer_url` | no | The URL to the download site for Red Hat OpenShift installation and client codes.  |
 | `private_vpc_cidr`     | no          | VPC private netwrok CIDR range default 10.10.0.0/16  |
